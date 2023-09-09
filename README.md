@@ -64,7 +64,8 @@ path 'main/' akan mengarahkan ke urls.py di directory main
 -Setelah semua ini selesai, kita tinggal commit dan push ke repository github dan hubungkan ke adaptable
 
 2.
-![BAGAN-WebBasedDjangoApp](C:\File Fatih\Scanned Documents\UI\Kuliah\PBP-Tugas2.png)
+![BAGAN-WebBasedDjangoApp!](PBP-Tugas2.png)
+
 -Jadi, saat client melakukan request, dan jika valid diterima oleh web server, dan
 diturunkan ke Django
 -Django menentukan URL
