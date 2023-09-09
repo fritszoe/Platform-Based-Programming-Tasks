@@ -74,7 +74,12 @@ diturunkan ke Django
 -models tersebut digunakan view untuk diteruskan ke template(html)
 -template(html) diteruskan dan ditampilkan ke pengguna
 
-3. 
+3.
+Venv(Virtual Environment), berguna untuk menjalankan project dengan dependencies yang berbeda-beda dalam
+satu sistem operasi yang sama.
+
+
+4. 
 Perbedaan MVC, MVT, dan MVVM
 -MVC(Model-View-Controller)
 -MVT(Model-View-Template)
