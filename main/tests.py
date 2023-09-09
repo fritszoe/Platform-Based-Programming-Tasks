@@ -18,8 +18,10 @@ class mainTest(TestCase):
     def test_main_context_variables(self):
         response = Client().get('/main/')
         self.assertEqual(response.status_code, 200)
+        self.assertIn('appName', response.context)
         self.assertIn('name', response.context)
         self.assertIn('class', response.context)
         context = response.context
+        self.assertEqual(context['appName'], 'Pacil-Storage')
         self.assertEqual(context['name'], 'Fatih Raditya Pratama')
         self.assertEqual(context['class'], 'PBP A')
