@@ -3,8 +3,8 @@ Nama    : Fatih Raditya Pratama
 NPM     : 2206083520
 
 Kelas   : PBP A
-
-TUGAS-2
+<details>
+<summary>>TUGAS-2</summary>
 1. 
 Membuat proyek baru di Django,
 -pertama bikin directory baru
@@ -96,7 +96,7 @@ semacam gabungan antara view dan model
 
 P.S
 Selain 2 tes di tests.py saya menambahkan satu test lagi
-
+</details>
 
 
 

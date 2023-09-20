@@ -12,20 +12,20 @@
     <h5>Pacil-Storage mempunyai total: </h5>
     <p>{{totalAmount}} products</p>
 
-    <table>
+    <table style="border-spacing: 0; border-color: black; border-style: solid; border-width: 1px;" >
         <tr>
-            <th>Name</th>
-            <th>Amount</th>
-            <th>Description</th>
+            <th style="border-color: black; border-style: solid; padding: 0.5rem; border-width: 1px;">Name</th>
+            <th style="border-color: black; border-style: solid; padding: 0.5rem; border-width: 1px;">Amount</th>
+            <th style="border-color: black; border-style: solid; padding: 0.5rem; border-width: 1px;">Description</th>
         </tr>
 
         {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
 
         {% for product in products %}
             <tr>
-                <td>{{product.name}}</td>
-                <td>{{product.amount}}</td>
-                <td>{{product.description}}</td>
+                <td style="border-color: black; border-style: solid; padding: 0.5rem; border-width: 1px;">{{product.name}}</td>
+                <td style="border-color: black; border-style: solid; padding: 0.5rem; border-width: 1px;">{{product.amount}}</td>
+                <td style="border-color: black; border-style: solid; padding: 0.5rem; border-width: 1px;">{{product.description}}</td>
             </tr>
         {% endfor %}
     </table>
