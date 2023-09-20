@@ -124,16 +124,16 @@ https://docs.djangoproject.com/en/4.2/topics/forms/#:~:text=GET%20and%20POST%20a
 2.
 HTML vs XML vs Json
 
-HTML: HTML memiliki elemen khusus dan atribut yang digunakan untuk menentukan struktur dan tampilan konten web, jadi biasanya digunakan untuk halaman web
+HTML: HTML memiliki elemen khusus dan atribut yang digunakan untuk menentukan struktur dan tampilan konten web, jadi biasanya digunakan untuk halaman web, html juga bisa diubah tampilannya dengan menggunakan CSS dan Javascript.
 
-XML: Dokumen XML membentuk struktur seperti tree yang dimulai dari root, lalu branch, hingga berakhir pada leaves. Dokumen XML harus mengandung sebuah root element yang merupakan parent dari elemen lainnya. XML memungkinkan penggunaan karakteristik khusus dan definisi dari dokumen karena XML didesain menjadi self-descriptive, kita bisa paham apa yang ada di XML dengan membaca XML nya.
+XML: Dokumen XML membentuk struktur seperti tree yang dimulai dari root, lalu branch, hingga berakhir pada leaves. Dokumen XML harus mengandung sebuah root element yang merupakan parent dari elemen lainnya. XML memungkinkan penggunaan karakteristik khusus dan definisi dari dokumen karena XML didesain menjadi self-descriptive, kita bisa paham apa yang ada di XML dengan membaca XML nya. XML lebih mudah dibaca bagi orang awam.
 
-Json: Json didesain menjadi self-describing sehingga kita sebagai manusia yang melihatnya akan langsung paham karena sangat mudah untuk dimengerti. Json digunakan untuk pertukaran data ringan antar server dan klien di aplikasi web
+Json: Json merupakan pasangan *key* *value* pair seperti dictionary pada Python dan map di Java, Json akan lebih sulit dipahami bagi orang awam yang melihat tapi pasti akan lebih mudah dipahami bagi pengembang karena Json merupakan turunan dari Javascript.
 
 3.
 Kenapa Json sering digunakan?
 
-Karena Seperti yang dijelaskan di nomor-2. Json itu didesain sebagai sebuah self-describing markup language, sehingga akan sangat mudah dipahami dan orang yang membacanya tidak akan terlalu bingung. Selain mudah dibaca, Json juga lebih ringkas dan terintegrasi dengan javascript(JS) sehingga akan lebih memudahkan penggunanya.
+Json adalah turunan dari Javascript sehingga orang-orang yang berpangalaman dengan Javascript tentunya akan lebih suka menggunakan Json, dan karena Javascript juga banyak yang pakai, pasti yang pakai Json juga banyak. Selain itu, Json dinilai *lightweight*.
 
 4.
 -Making Forms
@@ -188,7 +188,7 @@ ini routing nya
 path('json/', show_json, name='show_json'),
 ```
 -XML & Json by ID:  
- 
+
 Sekarang untuk return data berdasarkan ID dalam XML dan Json kita bisa menambahkan variabel baru seperti ini.
 ```python
 data = Product.objects.filter(pk=id)
