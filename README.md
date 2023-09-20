@@ -98,7 +98,11 @@ P.S
 Selain 2 tes di tests.py saya menambahkan satu test lagi
 
 
+
+
 TUGAS-3
+
+
 1.
 Perbedaan form POST dan form GET pada Django:
 
