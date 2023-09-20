@@ -7,15 +7,23 @@ Kelas   : PBP A
 <summary>TUGAS-2</summary>
 1.  
 Membuat proyek baru di Django:  
+
 -pertama bikin directory baru  
+
 -nyalakan virtual environment di directory dan masukkan requirements.txt yang berisi
 requirements yang dibutuhkan  
+
 -install semua lewat pip install  
+
 -menjalankan command "python manage.py startapp ('app name')"di directory  
+
 -tambahkan 'app name'(disini namanya 'main') di installed_apps dalam settings.py direktori project  
--Setelah itu kita akan mmebuat directory templates dalam directory 'main' dan akan menambahkan 
+
+-Setelah itu kita akan mmebuat directory templates dalam directory 'main' dan akan menambahkan
 main.html ke dalamnya  
+
 -Untuk membuat models, kita bisa melakukan:  
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     amount = models.IntegerField()
