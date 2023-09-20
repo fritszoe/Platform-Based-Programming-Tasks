@@ -23,12 +23,13 @@ requirements yang dibutuhkan
 main.html ke dalamnya  
 
 -Untuk membuat models, kita bisa melakukan:  
-'''
+'''python
 class Product(models.Model):
     name = models.CharField(max_length=255)
     amount = models.IntegerField()
     description = models.TextField()
 '''
+
 
 untuk name, amount, dan description, pakai field yang sesuai, untuk
 models.Model adalah kelas dasar yang digunakan untuk mendefinisikan model dalam Django.
