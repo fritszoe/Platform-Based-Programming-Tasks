@@ -23,7 +23,7 @@ requirements yang dibutuhkan
 main.html ke dalamnya  
 
 -Untuk membuat models, kita bisa melakukan:  
-
+'''python
 class Product(models.Model):
     name = models.CharField(max_length=255)
     amount = models.IntegerField()
