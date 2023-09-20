@@ -5,7 +5,7 @@ NPM     : 2206083520
 Kelas   : PBP A
 <details>
 <summary>TUGAS-2</summary>
-1. 
+1.  
 Membuat proyek baru di Django:  
 -pertama bikin directory baru  
 -nyalakan virtual environment di directory dan masukkan requirements.txt yang berisi
