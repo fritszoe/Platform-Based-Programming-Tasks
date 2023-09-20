@@ -153,15 +153,18 @@ Setelah itu, kita bisa menambahkan products nya di fungsi show_main yang ada di 
 kita harus menambahkan fungsi create_product di urls.py dan menambahkan path untuk menuju halaman form pembuatan product.
 Setelah itu barulah kita buat halaman html nya.
 
-2&3.
--Menambahkan fungsi di views untuk Show HTML, XML, JSON, XML by ID, dan JSON by ID
--Menambahkan routing
+2&3.  
 
--HTML: 
-fungsi untuk show HTML sudah ada dari tugas sebelumnya yaitu show_main yang akan menggunakan fungsi render untuk mengambil 3
-argumen yaitu context, request, dan main.html yang nantinya akan di render di satu main.html
+-Menambahkan fungsi di views untuk Show HTML, XML, JSON, XML by ID, dan JSON by ID  
 
--XML: 
+-Menambahkan routing  
+
+-HTML:  
+
+fungsi untuk show HTML sudah ada dari tugas sebelumnya yaitu show_main yang akan menggunakan fungsi render untuk mengambil 3 argumen yaitu context, request, dan main.html yang nantinya akan di render di satu main.html
+
+-XML:  
+
 Untuk mengembalikan data dalam bentuk XML kita bisa menggunakan serializer dan HTTPResponse, serializer digunakan untuk
 mengubah/transalasi objek menjadi XML, lalu kita akan membuat fungsi show_xml yang akan return HTTPResponse untuk menampilkan
 objek dalam bentuk xml
@@ -173,7 +176,8 @@ urls.py untuk menampilkan laman dalam fomat xml
 ```python
 path('xml/', show_xml, name='show_xml'),
 ```
--JSON: 
+-JSON:  
+
 Untuk JSon juga sama, menggunakan serializer dan HTTPResponse dan tidak lupa menambahkan path di urls.py untuk show dalam format
 json, bentuk return dan path nya hanya tinggal diganti dengan json
 ```python
@@ -183,7 +187,8 @@ ini routing nya
 ```python
 path('json/', show_json, name='show_json'),
 ```
--XML & Json by ID: 
+-XML & Json by ID:  
+ 
 Sekarang untuk return data berdasarkan ID dalam XML dan Json kita bisa menambahkan variabel baru seperti ini.
 ```python
 data = Product.objects.filter(pk=id)
