@@ -43,7 +43,7 @@ diikuti dengan
 python manage.py migrate ---> migrate mengaplikasikan perubahan model yang ada di basis data
 
 -Setelah pembuatan model dan migrasi model selesai, kita bisa membuat function di views untuk di return ke html kita dengan cara:
-
+```python
 def show_main(request):
     context = {
         'name': 'Fatih Raditya Pratama',
@@ -52,8 +52,10 @@ def show_main(request):
 
     return render(request, "main.html", context)
 
--Kita bisa melakukan routing ke main.html dengan cara:
+```
 
+-Kita bisa melakukan routing ke main.html dengan cara:
+```python
 from django.urls import path, include
 from main.views import show_main
 
@@ -63,7 +65,7 @@ urlpatterns = [
     path('', show_main, name='show_main'),
     path('main/',include('main.urls'))
 ]
-
+```
 path 'main/' akan mengarahkan ke urls.py di directory main
 
 -Setelah semua ini selesai, kita tinggal commit dan push ke repository github dan hubungkan ke adaptable
@@ -103,8 +105,8 @@ Selain 2 tes di tests.py saya menambahkan satu test lagi
 </details>
 
 
-
-TUGAS-3
+<details>
+<summary>TUGAS-3</summary>
 
 
 1.
@@ -163,33 +165,36 @@ argumen yaitu context, request, dan main.html yang nantinya akan di render di sa
 Untuk mengembalikan data dalam bentuk XML kita bisa menggunakan serializer dan HTTPResponse, serializer digunakan untuk
 mengubah/transalasi objek menjadi XML, lalu kita akan membuat fungsi show_xml yang akan return HTTPResponse untuk menampilkan
 objek dalam bentuk xml
-
+```python
 return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
-
+```
 HTTPResponse berguna untuk mengembalikan menjadi laman yang bisa dilihat, setelah ini tidak lupa kita akan menambahkan path di
 urls.py untuk menampilkan laman dalam fomat xml
-
+```python
 path('xml/', show_xml, name='show_xml'),
-
+```
 -JSON: 
 Untuk JSon juga sama, menggunakan serializer dan HTTPResponse dan tidak lupa menambahkan path di urls.py untuk show dalam format
 json, bentuk return dan path nya hanya tinggal diganti dengan json
-
+```python
 return HttpResponse(serializers.serialize("json", data), content_type="application/json")
-
+```
+ini routing nya
+```python
 path('json/', show_json, name='show_json'),
-
+```
 -XML & Json by ID: 
 Sekarang untuk return data berdasarkan ID dalam XML dan Json kita bisa menambahkan variabel baru seperti ini.
-
+```python
 data = Product.objects.filter(pk=id)
-
+```
 Yang akan menyimpan hasil query dari data dengan id tertentu. Setelah itu barulah kita return seperti biasa
 menggunakan HTTPResponse dan juga serializer, xml untuk format xml dan json untuk format json(sama seperti sebelum-sebelumnya). Tidak lupa kita akan menambahkan routing di urls.py, sama seperti sebelumnya:
-
+```python
 path('xml/<int:id>/', show_xml_by_id, name='show_xml_by_id'),
 
 path('json/<int:id>/', show_json_by_id, name='show_json_by_id'),
+```
 
 Seperti di atas.
 
@@ -208,7 +213,7 @@ menjumlahkan numericalField, integer, float, dsb. Aggregate sendiri adalah metho
 jika ingin menggunakan fungsi-fungsi seperti Sum, Avg, Count, Max, Min, dll. Ini semua karena
 Sum, Avg, Count, Max, Min, dll itu adalah bagian dari aggregate functions yang membutuhkan aggregate
 method. Berikut adalah code nya:
-
+```python
 def show_main(request):
     ...
     total_amount = products.aggregate(Sum('amount'))['amount__sum']
@@ -219,3 +224,6 @@ def show_main(request):
     }
 
     return render(request, "main.html", context)
+```
+
+</details>
