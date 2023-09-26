@@ -3,6 +3,7 @@ Nama    : Fatih Raditya Pratama
 NPM     : 2206083520
 
 Kelas   : PBP A
+#
 <details>
 <summary>TUGAS-2</summary>
 1.  
@@ -104,7 +105,7 @@ P.S
 Selain 2 tes di tests.py saya menambahkan satu test lagi
 </details>
 
-
+#
 <details>
 <summary>TUGAS-3</summary>
 
@@ -230,5 +231,143 @@ def show_main(request):
 
     return render(request, "main.html", context)
 ```
+#
+</details>
+
+<details>
+<summary>TUGAS-4</summary>
+
+##
+Register:
+
+Dengan memanfaatkan UserCreationForm bawaan, kita bisa membuat tampilan html baru dan akan lakukan routing ke page tersebut, lalu dengan fungsi register di views.py dengan query berdasarkan input user di {request.POST} dan pada akhirnya akan return kembali ke main
+
+```python
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
+```
+###
+Login:
+
+Membuat login page, kita perlu membuat suatu fungsi lagi di views.py dan akan memanfaatkan {authenticate} dan {login} dari library django, authenticate(request, username=username, password=password) digunakan untuk melakukan autentikasi pengguna berdasarkan username dan password yang diterima dari permintaan (request) yang dikirim oleh pengguna saat login. Setelah itu, kita akan buat page login.html tidak lupa dengan routing, login.html adalah sarana untuk user login dan kita akan restriksi page main dengan cara menambahkan 
+```python
+@login_required(login_url='/login')
+```
+pada fungsi show_main agar mengarahkan page ke login.html, jadi user harus login untuk melihat page main.
+###
+Logout:
+
+Untuk logout, kita bisa memanfaatkan logout dari django, user akan logout berdasarkan input user dan jika logout akan kembali ke page login.
+```python
+def logout_user(request):
+    logout(request)
+    return redirect('main:login')
+```
+Untuk input dari user sendiri kita bisa menambahkan button logout di main.html
+###
+Dummy Account:
+
+Membuat dummy account, kita bisa menggunakan fitur register yang sudah dibuat sebelumnya, saya akan membuat dua dummy account masing-masing bernama bader dan franku. Masing-masing dengan tiga data unique.
+####
+bader:
+
+Akun bader berisi tiga item: HG 1/144 MS-06s Char's Zaku-II, HG 1/144 MS-05s Char's Zaku-I, dan 1/100 Full-Mechanics Gundam Aerial 
+
+franku:
+
+Akun franku berisi tiga item: PG RX 0 1/60 Unicorn Gundam, PG 1/60 GN-001 Gundam Exia, dan PG MS-06 F 1/60 Zaku II
+###
+Menghubungkan model item dengan user:
+
+Hal ini dilakukan supaya setiap account punya item-item unik tersendiri yang berbeda dengan akun lain. Untuk melakukan ini, kita bisa menambahkan model user di models.py directory main, lalu tambahkan di class product,
+```python
+class Product(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ...
+```
+Jadi, sebuah product akan terasosiasi dengan seorang user dengan suatu ForeignKey. Setelah itu, pada fungsi create_product di views.py bisa kita edit menjadi;
+```python
+def create_product(request):
+ form = ProductForm(request.POST or None)
+
+ if form.is_valid() and request.method == "POST":
+     product = form.save(commit=False)
+     product.user = request.user
+     product.save()
+     return HttpResponseRedirect(reverse('main:show_main'))
+ ...
+```
+param commit=false berguna untuk mencegah Django untuk tidak langsung menyimpan objek yang dibuat ke dalam database, jadi objek tersebut bisa dimodifikasi dahulu sebelum disimpan. Pada kasus ini, kita akan mengisi field user dengan objek User dari return value request.user yang sedang terotorisasi untuk menandakan bahwa objek tersebut dimiliki oleh pengguna yang sedang login.
+###
+User details and cookies:
+
+Untuk menambahkan detail seperti siapa yang sedang login, kita bisa menambahkan di context fungsi show_main seperti ini:
+```python
+def show_main(request):
+    products = Product.objects.filter(user=request.user)
+
+    context = {
+        'name': request.user.username,
+    ...
+...
+```
+Dimana request.user.username akan me return username dari user yang sedang login. Untuk cookies sendiri, seperti last login nya kapan, kita bisa menambahkan di login_user;
+```python
+...
+if user is not None:
+    login(request, user)
+    response = HttpResponseRedirect(reverse("main:show_main")) 
+    response.set_cookie('last_login', str(datetime.datetime.now()))
+    return response
+...
+```
+Jadi dengan penambahan cookie last login, kita akan menyimpan string berupa datetime dari saat user tersebut login, dan untuk menampilkannya di main, kita tinggal menambahkan seperti di context views.py dan tampilkan di main di bawah tombol logout seperti ini;
+```python
+context = {
+    'name': 'Pak Bepe',
+    'class': 'PBP A',
+    'products': products,
+    'last_login': request.COOKIES['last_login'],
+}
+```
+```html
+...
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+...
+```
+Oh iya, tidak lupa, kita juga akan delete cookie last_login saat logout, kita bisa menambahkan seperti ini di fungsi logout_user;
+```python
+response.delete_cookie('last_login')
+```
+##
+###
+Apa itu Django UserCreationForm?
+
+Django UserCreationForm adalah impor formulir bawaan yang memudahkan pembuatan formulir pendaftaran pengguna dalam aplikasi web. Dengan formulir ini, pengguna baru dapat mendaftar dengan mudah di situs web Anda tanpa harus menulis kode dari awal. Tapi kekurangan dari UserCreationForm ini adalah adanya keterbatasan dalam kustomisasi UI dan tidak suitable untuk penggunaan yang lebih kompleks.
+###
+Apa perbedaan antara autentikasi dan otorisasi dalam konteks Django, dan mengapa keduanya penting?
+
+Authentication adalah proses untuk mengetahui siapa ini, siapa yang sedang menggunakan, contoh dari authentication adalah login. Tujuan dari adanya authentication adalah untuk memastikan sang pengguna adalah orang yang di klaim.
+
+Authorization adalah proses verifikasi untuk memastikan apakah kita punya akses terhadap sesuatu. Jika tidak ada authorization, maka pengguna random bisa saja menghapus sesuatu yang penting milik pengguna tertentu.
+
+Keduanya ini sangatlah penting karena dua ini adalah dasar konsep keamanan aplikasi web.
+###
+Cookies?
+
+Cookies adalah data kecil yang disimpan pada perangkat pengguna oleh browser web sebagai respons atas permintaan dari server web. Data ini dapat berupa informasi singkat, seperti pengenal sesi, preferensi pengguna, atau informasi lainnya yang diperlukan oleh aplikasi web. Cookies memungkinkan aplikasi web untuk menyimpan informasi di perangkat pengguna dan mengaksesnya kembali di masa mendatang. Cookies pada django pada dasarnya juga melakukan hal yang sama.
+###
+Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai?
+
+Walaupun cookies adalah hal yang umum dalam sebuah aplikasi web, tapi kita harus tetap waspada karena cookies bisa saja melanggar hak privasi kita dan mengambil data-data pribadi tanpa izin.
 
 </details>
