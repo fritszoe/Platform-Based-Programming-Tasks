@@ -369,5 +369,118 @@ Cookies adalah data kecil yang disimpan pada perangkat pengguna oleh browser web
 Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai?
 
 Walaupun cookies adalah hal yang umum dalam sebuah aplikasi web, tapi kita harus tetap waspada karena cookies bisa saja melanggar hak privasi kita dan mengambil data-data pribadi tanpa izin.
-
 </details>
+
+#
+<details>
+<summary>TUGAS-5</summary>
+
+##
+Pertama kita menambahkan bootstrap, CSS, dan JS,setelah itu, saya menambahkan navbar pada main
+```html
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Welcome, {{name}}</a>
+            <a style = "border-color: darkgrey; border-style: solid; padding: 0.01 rem; border-width: 5px;" href="{% url 'main:logout' %}">
+                <button>
+                    Logout
+                </button>
+            </a>
+        </div>
+    </nav>
+```
+di sini navbar saya memiliki brand yang berisi sapaan pada username, lalu ada button 'Logout' yang akan menggiring user ke fungsi logout.
+
+Selanjutnya, saya mengubah tampilan pada main.html menggunakan card, dan utk objek terakhir, akan diberi warna berbeda dari card sebelumnya
+```html
+ <div class="row">
+        {% for product in products %}
+            <div class="col-md-4 mb-3{% if forloop.last %} last-card{% endif %}">
+                <div class="card custom-card{% if forloop.last %} last-product-card{% endif %}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">Amount: {{ product.amount }}</p>
+                        <p class="card-text"> Description:<br>
+                            {{ product.description|linebreaks }}</p>
+                        <p class="card-text">Price: ${{ product.price }}</p>
+                        <a href="{% url 'main:edit_product' product.pk %}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{% url 'main:delete_product' product.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <style>
+        .last-product-card {
+            background-color: khaki; /* Specify the desired background color */
+        }
+    </style>
+```
+Pada saat melakukan looping, saya menambahkan kondisi if loop.last maka last nya menjadi last-product-card yang saya atur background color nya jadi berbeda
+
+Selain di main, saya juga menambahkan navbar pada create_product
+```html
+{% extends 'base.html' %} 
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'main:show_main' %}">Back to main</a>
+        <a href="{% url 'main:logout' %}">
+            <button>
+                Logout
+            </button>
+        </a>
+    </div>
+</nav>
+<h1>What would you like to add today?</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Add Product"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endblock %}
+```
+Pada brand navbar yang isinya 'back to main' saya menambahkan url utk kembali ke main, jadi tidak hanya sekedar label, jika user click navbar brand, mereka akan dikembalikan ke main. Satu lagi, saya menambahkan 'price' di models karena sepertinya diperlukan.
+<br>
+PERTANYAAN
+1. Selectors
+
+-Element selector:
+Memungkinkan utk mengubah properti utk semua elemen yang memiliki tag HTML yang sama
+Ini biasanya digunakan kalau kita ingin apply style yang sama utk satu elemen di website kita
+
+-ID selector:
+Selector menggunakan id, id unique utk satu halaman web, id dapat ditambahkan pada template HTML
+Id selector digunakan jika kita ingin apply suatu style spesifik ke satu halaman
+
+-Class selector:
+Class selector memungkinkan utk mengelompokkan elemen dengan karakteristik sama
+Jadinya class selector digunakan jika kita ingin apply suatu style utk sekelompok elemen dengan karakteristik sama
+
+2. Margin and Padding
+
+Margin: ruang di luar elemen, digunakan utk mengatur jarak di luar, jadi ga keliatan numpuk atau terlalu berdempetan
+
+Padding: padding digunakan untuk membatasi konten dalam elemen, seperti batas ujung paragraf di word, ga sampai di pinggir kertas nya
+
+3. Bootstrap vs Tailwind
+
+Bootstrap sudah memiliki elemen siap pakai, jadi utk komponen-komponen sudah di pre-design oleh bootstrap, 
+
+Tailwind adalah framework utility-first, yang berarti itu memberikan banyak utility classes yang dapat langsung digunakan di HTML untuk membangun desain. Lebih banyak fokus pada penggunaan kelas yang menggambarkan apa yang ingin dicapai, bukan penggunaan komponen
+
+Jadi, bootstrap digunakan jika kita perlu bekerja cepat, karena komponen-komponen sudah di pre-design oleh bootstrap, sedangkan utk Tailwind, itu bagus jika kita ingin benar2 kustomisasi secara bebas dan tidak terikat pada suatu hal spesifik.
+</details>
+
+#
+..
