@@ -233,7 +233,6 @@ def show_main(request):
 ```
 #
 </details>
-
 <details>
 <summary>TUGAS-4</summary>
 
@@ -480,7 +479,175 @@ Bootstrap sudah memiliki elemen siap pakai, jadi utk komponen-komponen sudah di 
 Tailwind adalah framework utility-first, yang berarti itu memberikan banyak utility classes yang dapat langsung digunakan di HTML untuk membangun desain. Lebih banyak fokus pada penggunaan kelas yang menggambarkan apa yang ingin dicapai, bukan penggunaan komponen
 
 Jadi, bootstrap digunakan jika kita perlu bekerja cepat, karena komponen-komponen sudah di pre-design oleh bootstrap, sedangkan utk Tailwind, itu bagus jika kita ingin benar2 kustomisasi secara bebas dan tidak terikat pada suatu hal spesifik.
+</br>
 </details>
 
 #
-..
+<details>
+<summary>TUGAS-6</summary>
+
+##
+<br>
+1.
+
+*Perbedaan Synchronous dan Asynchronous Programming:*
+
+*Synchronous*
+Synchronous Programming berarti program berjalan per satu waktu, artinya program akan menunggu satu tugas selesai sebelum menjalankan tugas yang lain, jika ada tugas yang memakan waktu, program akan berhenti dan menjalankan tugas tersebut sampai selesai sebelum lanjut ke eksekusi berikutnya.
+
+*Asynchronous*
+Asynchronous programming, tugas-tugas dieksekusi secara mandiri, jadi tidak menghalangi eksekusi tugas lain, ini memungkinkan program melakukan suatu multi-tasking dan meningkatkan efisiensi dari program.
+</br>
+
+##
+<br>
+2.
+
+*Paradigma Event-driven Programming*
+
+Even-driven programming berarti bahwa alur eksekusi dari program ditentukan oleh event yang terjadi pada program, dalam AJAX, sering digunakan untuk mengatasi interaksi secara _asynchronous_. Jadi, misalkan seorang user klik suatu button, mencari sesuatu di search bar, membuka menu tertentu, login, logout, itu semua merupakan bagian dari event-driven programming, contohnya dalam tugas kali ini adalah _'button-add'_ yang menerapkan '_.onclick_'.
+
+```javascript
+document.getElementById("button_add").onclick = addProduct
+```
+*.onclick* di sini menandakan terjadinya sebuah event click di button-add.
+</br>
+
+##
+<br>
+3.
+
+*Penerapan Asynchronous Programming pada AJAX*
+
+Seperti yang dijelaskan di awal, bahwa _asynchronous_ programming adalah sebuah cara programming yang membuat program berjalan lebih efisien karena tidak harus melakukan tugas-tugas secara bergantian di satu waktu, tetapi bisa melakukan banyak tugas pada satu waktu.
+
+Dalam AJAX, kita bisa menerapkan hal ini untuk membuat pengguna tidak perlu melakukan _refresh_ pada halaman setiap kali ada _update_ informasi. Jadi, _asynchronous_ dalam AJAX memungkinkan untuk mengirim permintaan kepada server secara _asynchronous_ sehingga memungkinkan pengguna tidak terhenti selama pengiriman data.
+</br>
+
+##
+<br>
+4.
+
+**Mengambil Item as JSon dan menambahkan product dengan AJAX**
+
+Ini dibutuhkan supaya kita bisa menggunakan Json utk AJAX
+```JS
+def get_product_json(request):
+    product_item = Product.objects.all()
+    return HttpResponse(serializers.serialize('json', product_item))
+
+@csrf_exempt
+def add_product_ajax(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        amount = request.POST.get("amount")
+        price = request.POST.get("price")
+        description = request.POST.get("description")
+        user = request.user
+
+        new_product = Product(name=name, amount=amount,price=price, description=description, user=user)
+        new_product.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+```
+di atas adalah 2 function utk mendapatkan product as json dan menambahkan product dgn AJAX
+
+**Cards jadi AJAX**
+```JS
+ productsJson.forEach((item) => {
+    //ini gatau knp tapi url nya harus diginiin baru bisa
+    const urlEdit = "{% url 'main:edit_product' id=1 %}".replace(/1/, item.pk.toString())
+    const urlDel = "{% url 'main:delete_product' id=1 %}".replace(/1/, item.pk.toString())
+    const urlIncr = "{% url 'main:increment_product' id=1 %}".replace(/1/, item.pk.toString())
+    const urlDecr = "{% url 'main:decrement_product' id=1 %}".replace(/1/, item.pk.toString())
+    //g utk ganti semua kemunculan \n, bukan cuma satu doang,/ adalah karakter awal untuk memulai ungkapan reguler, 
+    //\n adalah karakter newline yang ingin diganti, dan g adalah modifikasi yang menunjukkan bahwa kita ingin menggantikan 
+    //semua kemunculan karakter newline dalam string, bukan hanya yang pertama.
+    const formattedDescription = item.fields.description.replace(/\n/g, '<br>');
+    htmlString += ` 
+    <div class="col-md-auto mb-auto">
+        <div class="card custom-card">
+            <div class="card-body">
+                <h5 class="card-title">${ item.fields.name }</h5>
+                <p class="card-text">Amount: ${ item.fields.amount }</p>
+                <p class="card-text"> Description:<br>
+                    ${ formattedDescription }</p>
+                <p class="card-text">Price:  $${ item.fields.price }</p>    
+                <a href="${urlEdit}" class="btn btn-primary btn-sm">Edit</a>
+                <a href="${urlDel}" class="btn btn-danger btn-sm">Delete</a>
+                <a href="${urlIncr}" class="btn btn-success btn-sm" id="button_incr">+</a>
+                <a href="${urlDecr}" class="btn btn-warning btn-sm" id="button_decr">-</a>
+            </div>
+        </div>
+    </div>` 
+```
+Jadi utk setiap product kita ubah url nya jadi variabel dan gunakan dalam AJAX nya
+
+**ADD Product**
+
+Dengan fungsi yang tadi, kita bisa menambahkan modal supaya tidak perlu pindah-pindah halaman
+
+```html
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Product</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form" onsubmit="return false;">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="col-form-label">Amount:</label>
+                            <input type="number" class="form-control" id="amount" name="amount"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="col-form-label">Price:</label>
+                            <input type="number" class="form-control" id="price" name="price"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="description" name="description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Product by AJAX</button>
+```
+kita menambahkan button yang akan menampilkan modal
+
+Lalu kita akan hubungkan fungsi add_product_ajax yang ada di path /create-ajax/ dengan modal, ini bisa dilakukan dengan cara 
+```html
+<Script>
+     function addProduct() {
+            fetch("{% url 'main:add_product_ajax' %}", {
+                method: "POST",
+                body: new FormData(document.querySelector('#form'))
+            }).then(refreshProducts)
+    
+            document.getElementById("form").reset()
+            refreshProducts()
+            return false
+        }
+        document.getElementById("button_add").onclick = addProduct
+</Script>
+```
+
+Jadi button tadi akan di assign dengan fungsi addProduct yang mengambil fungsi dari views di path /create-ajax/
+</br>
+</details>

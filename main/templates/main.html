@@ -18,43 +18,113 @@
 
     <h5>Class:</h5>
     <p>{{class}}</p>
-
-    <h5>Pacil-Storage mempunyai total: </h5>
-    <p>{{totalAmount}} products</p>
-
-    <h5>Products: </h5>
-
         {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
-        <div class="row">
-        {% for product in products %}
-            <div class="col-md-4 mb-3{% if forloop.last %} last-card{% endif %}">
-                <div class="card custom-card{% if forloop.last %} last-product-card{% endif %}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ product.name }}</h5>
-                        <p class="card-text">Amount: {{ product.amount }}</p>
-                        <p class="card-text"> Description:<br>
-                            {{ product.description|linebreaks }}</p>
-                        <p class="card-text">Price: ${{ product.price }}</p>
-                        <a href="{% url 'main:edit_product' product.pk %}" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="{% url 'main:delete_product' product.pk %}" class="btn btn-danger btn-sm">Delete</a>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-    <style>
+        <div class="row" id="product_card"></div>
+    <!-- <style>
         .last-product-card {
             background-color: khaki; /* Specify the desired background color */
         }
-    </style>
+    </style> -->
     <br />
 
-    <a href="{% url 'main:create_product' %}">
-        <button>
-            Add New Product
-        </button>
-    </a>
-    
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Product</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form" onsubmit="return false;">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="col-form-label">Amount:</label>
+                            <input type="number" class="form-control" id="amount" name="amount"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="col-form-label">Price:</label>
+                            <input type="number" class="form-control" id="price" name="price"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="description" name="description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <h5>Sesi terakhir login: {{ last_login }}</h5>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Product by AJAX</button>
+    <h5>Sesi terakhir login: {{ last_login }}</h5>  
+
+    <script>
+        async function refreshProducts() {
+            const productCard = document.getElementById("product_card") 
+            productCard.innerHTML = ""
+            const products = await fetch("{% url 'main:get_product_json' %}")
+            const productsJson = await products.json()
+            console.log(productsJson)
+            let htmlString = `
+            <h5>Pacil-Storage mempunyai total: </h5>
+            <p>{{totalAmount}} products</p>
+            <h5>Products: </h5>`
+            productsJson.forEach((item) => {
+                //ini gatau knp tapi url nya harus diginiin baru bisa
+                const urlEdit = "{% url 'main:edit_product' id=1 %}".replace(/1/, item.pk.toString())
+                const urlDel = "{% url 'main:delete_product' id=1 %}".replace(/1/, item.pk.toString())
+                const urlIncr = "{% url 'main:increment_product' id=1 %}".replace(/1/, item.pk.toString())
+                const urlDecr = "{% url 'main:decrement_product' id=1 %}".replace(/1/, item.pk.toString())
+                //g utk ganti semua kemunculan \n, bukan cuma satu doang,/ adalah karakter awal untuk memulai ungkapan reguler, 
+                //\n adalah karakter newline yang ingin diganti, dan g adalah modifikasi yang menunjukkan bahwa kita ingin menggantikan 
+                //semua kemunculan karakter newline dalam string, bukan hanya yang pertama.
+                const formattedDescription = item.fields.description.replace(/\n/g, '<br>');
+                htmlString += ` 
+                <div class="col-md-auto mb-auto">
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <h5 class="card-title">${ item.fields.name }</h5>
+                            <p class="card-text">Amount: ${ item.fields.amount }</p>
+                            <p class="card-text"> Description:<br>
+                                ${ formattedDescription }</p>
+                            <p class="card-text">Price:  $${ item.fields.price }</p>    
+                            <a href="${urlEdit}" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="${urlDel}" class="btn btn-danger btn-sm">Delete</a>
+                            <a href="${urlIncr}" class="btn btn-success btn-sm" id="button_incr">+</a>
+                            <a href="${urlDecr}" class="btn btn-warning btn-sm" id="button_decr">-</a>
+                        </div>
+                    </div>
+                </div>` 
+                })
+            
+            productCard.innerHTML = htmlString
+        }
+
+        refreshProducts()
+        function addProduct() {
+            fetch("{% url 'main:add_product_ajax' %}", {
+                method: "POST",
+                body: new FormData(document.querySelector('#form'))
+            }).then(refreshProducts)
+    
+            document.getElementById("form").reset()
+            refreshProducts()
+            return false
+        }
+        document.getElementById("button_add").onclick = addProduct
+    </script>
+
+    <style>
+        .last-product-card {
+        background-color: khaki; /* Specify the desired background color */
+        }
+    </style>
 {% endblock content %}
