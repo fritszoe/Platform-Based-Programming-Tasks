@@ -650,4 +650,6 @@ Lalu kita akan hubungkan fungsi add_product_ajax yang ada di path /create-ajax/ 
 
 Jadi button tadi akan di assign dengan fungsi addProduct yang mengambil fungsi dari views di path /create-ajax/
 </br>
+
+http://fatih-raditya-tugas.pbp.cs.ui.ac.id/
 </details>
